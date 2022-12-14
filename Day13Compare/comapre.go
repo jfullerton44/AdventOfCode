@@ -103,22 +103,10 @@ func round2() (int, error) {
 }
 
 func isOrdered(a []int, b []int) bool {
-	aOpen := false
-	bOpen := false
 	j := 0
 	for i := 0; i < len(a); i++ {
 		elem := a[i]
 		elemb := b[j]
-		if elem == -100 {
-			aOpen = true
-			i++
-			elem = a[i]
-		}
-		if elemb == -100 {
-			bOpen = true
-			j++
-			elemb = b[j]
-		}
 
 		if i >= len(b) {
 			return false
