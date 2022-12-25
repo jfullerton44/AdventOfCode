@@ -22,12 +22,12 @@ func main() {
 
 	fmt.Printf("Round 1: %d\n", rd1)
 
-	// locations, err = readInput()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	locations, err = readInput()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	rd2, err := round2()
+	rd2, err := round2(locations)
 
 	if err != nil {
 		log.Fatal(err)
@@ -45,8 +45,8 @@ func round1(locations *state) (int, error) {
 	for len(queue) != 0 {
 		curr := queue[0]
 		queue = queue[1:]
-		fmt.Printf("Starting with \n")
-		print(curr)
+		//fmt.Printf("Starting with \n")
+		//print(curr)
 		out, queue, err = operate(curr, queue)
 		if out != 0 {
 			return out, nil
@@ -55,8 +55,22 @@ func round1(locations *state) (int, error) {
 	return 0, err
 }
 
-func round2() (int, error) {
-	return 0, nil
+func round2(locations *state) (int, error) {
+	queue := make([]state, 1)
+	queue[0] = *locations
+	out := 0
+	var err error
+	for len(queue) != 0 {
+		curr := queue[0]
+		queue = queue[1:]
+		//fmt.Printf("Starting with \n")
+		//print(curr)
+		out, queue, err = operate(curr, queue)
+		if out != 0 {
+			return out, nil
+		}
+	}
+	return 0, err
 }
 
 type Position struct {
@@ -85,7 +99,6 @@ type state struct {
 }
 
 func print(curr state) {
-	return
 	for y := 0; y <= curr.yMax; y++ {
 		for x := 0; x <= curr.xMax; x++ {
 			pos := Position{
@@ -185,15 +198,14 @@ func operate(curr state, queue []state) (int, []state, error) {
 			return curr.moves + 1, nil, nil
 		}
 	}
-	fmt.Printf("updated to\n")
-	fmt.Printf("(%d, %d) %d\n", explorer.location.X, explorer.location.Y, curr.moves)
-	print(new)
+	//fmt.Printf("updated to\n")
+	//fmt.Printf("(%d, %d) %d\n", explorer.location.X, explorer.location.Y, curr.moves)
 
 	if isAvailable(new, explorer.location.X, explorer.location.Y) {
 		newExplorer := explorer.clone()
 		newState := generateState(curr)
 		newState.locations[*newExplorer.location] = &location{[]*point{newExplorer}}
-		print(newState)
+		//print(newState)
 		if !positionExists(*newExplorer, queue, new) {
 			queue = append(queue, newState)
 		}
@@ -204,7 +216,7 @@ func operate(curr state, queue []state) (int, []state, error) {
 		newExplorer.location.X = newExplorer.location.X + 1
 		newState := generateState(curr)
 		newState.locations[*newExplorer.location] = &location{[]*point{newExplorer}}
-		print(newState)
+		//print(newState)
 		if !positionExists(*newExplorer, queue, new) {
 			queue = append(queue, newState)
 		}
@@ -214,7 +226,7 @@ func operate(curr state, queue []state) (int, []state, error) {
 		newExplorer.location.X = newExplorer.location.X - 1
 		newState := generateState(curr)
 		newState.locations[*newExplorer.location] = &location{[]*point{newExplorer}}
-		print(newState)
+		//print(newState)
 
 		if !positionExists(*newExplorer, queue, new) {
 			queue = append(queue, newState)
@@ -225,7 +237,7 @@ func operate(curr state, queue []state) (int, []state, error) {
 		newExplorer.location.Y = newExplorer.location.Y + 1
 		newState := generateState(curr)
 		newState.locations[*newExplorer.location] = &location{[]*point{newExplorer}}
-		print(newState)
+		//print(newState)
 		if !positionExists(*newExplorer, queue, new) {
 			queue = append(queue, newState)
 		}
@@ -235,7 +247,7 @@ func operate(curr state, queue []state) (int, []state, error) {
 		newExplorer.location.Y = newExplorer.location.Y - 1
 		newState := generateState(curr)
 		newState.locations[*newExplorer.location] = &location{[]*point{newExplorer}}
-		print(newState)
+		//print(newState)
 		if !positionExists(*newExplorer, queue, new) {
 			queue = append(queue, newState)
 		}
@@ -326,7 +338,7 @@ func (p *point) clone() *point {
 }
 
 func readInput() (*state, error) {
-	f, err := os.Open("in1.txt")
+	f, err := os.Open("in.txt")
 	start := state{
 		locations: make(map[Position]*location),
 	}
@@ -401,7 +413,7 @@ func readInput() (*state, error) {
 	start.locations[endPosition] = loc
 	start.xEnd = endX
 	start.yEnd = y
-	print(start)
+	//print(start)
 	return &start, nil
 }
 
